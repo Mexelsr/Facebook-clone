@@ -10,7 +10,6 @@ function login() {
     let users = JSON.parse(localStorage.getItem("users")) || {};
 
     if (users[username]) {
-        // User exists, validate password
         if (users[username] === password) {
             localStorage.setItem("user", username);
             document.getElementById("login-page").style.display = "none";
@@ -20,7 +19,6 @@ function login() {
             alert("Incorrect password!");
         }
     } else {
-        // First-time login, store password
         users[username] = password;
         localStorage.setItem("users", JSON.stringify(users));
         localStorage.setItem("user", username);
@@ -47,7 +45,7 @@ function createPost() {
         user: localStorage.getItem("user"),
         content: content,
         time: new Date().toLocaleString(),
-        reactions: {} 
+        reactions: {}
     };
 
     let posts = JSON.parse(localStorage.getItem("posts")) || [];
@@ -65,7 +63,7 @@ function loadPosts() {
     let posts = JSON.parse(localStorage.getItem("posts")) || [];
     posts.forEach((post, index) => {
         const currentUser = localStorage.getItem("user");
-        const userReaction = post.reactions[currentUser] || ""; 
+        const userReaction = post.reactions[currentUser] || "";
 
         const postElement = document.createElement("div");
         postElement.classList.add("post");
@@ -79,6 +77,7 @@ function loadPosts() {
             <div class="reaction-counts" id="reaction-counts-${index}">
                 ${generateReactionCounts(post.reactions)}
             </div>
+            <button onclick="deletePost(${index})">🗑️ Delete</button>
         `;
         feed.appendChild(postElement);
     });
@@ -116,7 +115,13 @@ function generateReactionCounts(reactions) {
         `<span>${reaction} ${count}</span>`).join(" ");
 }
 
-// Auto-login if user exists
+function deletePost(index) {
+    let posts = JSON.parse(localStorage.getItem("posts")) || [];
+    posts.splice(index, 1);
+    localStorage.setItem("posts", JSON.stringify(posts));
+    loadPosts();
+}
+
 if (localStorage.getItem("user")) {
     document.getElementById("login-page").style.display = "none";
     document.getElementById("main-page").style.display = "block";
