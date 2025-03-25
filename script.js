@@ -58,7 +58,7 @@ function createPost() {
 
 function loadPosts() {
     const feed = document.getElementById("feed");
-    feed.innerHTML = "";
+    feed.innerHTML = ""; // Clear previous posts before adding new ones
 
     let posts = JSON.parse(localStorage.getItem("posts")) || [];
     posts.forEach((post, index) => {
