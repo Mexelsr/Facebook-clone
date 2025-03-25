@@ -1,0 +1,111 @@
+/* Futuristic Neon Style */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: #000;
+    color: #0ff;
+}
+
+#login-page, #main-page {
+    max-width: 400px;
+    margin: 100px auto;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+h2, h1 {
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #0ff;
+    border-radius: 5px;
+    color: #0ff;
+    margin-top: 10px;
+}
+
+button {
+    background: linear-gradient(45deg, #0ff, #00f);
+    color: black;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+button:hover {
+    box-shadow: 0 0 15px #0ff;
+}
+
+#feed {
+    margin-top: 20px;
+}
+
+.post {
+    background: rgba(0, 255, 255, 0.2);
+    padding: 10px;
+    margin: 10px auto;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #0ff;
+    backdrop-filter: blur(5px);
+}
+/* Reaction Buttons */
+.reaction-buttons {
+    margin-top: 10px;
+}
+
+.reaction-button {
+    font-size: 18px;
+    padding: 5px 10px;
+    background: transparent;
+    border: 2px solid #0ff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin: 2px;
+}
+
+.reaction-button:hover {
+    background: #0ff;
+    color: black;
+    box-shadow: 0 0 10px #0ff;
+}
+
+.reaction-button.active {
+    background: #0ff;
+    color: black;
+    box-shadow: 0 0 15px #0ff;
+}
+
+/* Reaction Counts */
+.reaction-counts {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #0ff;
+}
+input[type="password"] {
+    font-size: 16px;
+    padding: 10px;
+    width: 80%;
+    margin: 10px 0;
+    border: 2px solid #0ff;
+    background: black;
+    color: #0ff;
+    text-align: center;
+    border-radius: 5px;
+}

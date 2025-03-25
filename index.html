@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Social</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-page">
+    <div class="login-container">
+        <h2>Neon Social</h2>
+        <input type="text" id="username" placeholder="Enter your name">
+        <input type="password" id="password" placeholder="Enter your password">
+        <button onclick="login()">Enter the Future</button>
+    </div>
+</div>
+
+
+    <div id="main-page" style="display: none;">
+        <header>
+            <h1>Neon Social</h1>
+            <button onclick="logout()">Logout</button>
+        </header>
+
+        <div class="post-box">
+            <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+            <button onclick="createPost()">Post</button>
+        </div>
+
+        <div id="feed">
+    <!-- Posts will appear here -->
+</div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
