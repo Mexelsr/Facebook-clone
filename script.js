@@ -7,6 +7,9 @@ const firebaseConfig = {
     messagingSenderId: "89704012515",
     appId: "1:89704012515:web:61a937fb6454d47eb3c3d6"
 };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 function login() {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
