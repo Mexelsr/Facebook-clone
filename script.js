@@ -1,3 +1,30 @@
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyA4VE4mxYVBGQPKs-Y5g5_K6-UjTC2Hc_g",
+    authDomain: "facebook-clone-ad7d8.firebaseapp.com",
+    projectId: "facebook-clone-ad7d8",
+    storageBucket: "facebook-clone-ad7d8.firebasestorage.app",
+    messagingSenderId: "89704012515",
+    appId: "1:89704012515:web:61a937fb6454d47eb3c3d6",
+    measurementId: "G-XK8SS32QZF"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 function login() {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
@@ -7,25 +34,10 @@ function login() {
         return;
     }
 
-    let users = JSON.parse(localStorage.getItem("users")) || {};
-
-    if (users[username]) {
-        if (users[username] === password) {
-            localStorage.setItem("user", username);
-            document.getElementById("login-page").style.display = "none";
-            document.getElementById("main-page").style.display = "block";
-            loadPosts();
-        } else {
-            alert("Incorrect password!");
-        }
-    } else {
-        users[username] = password;
-        localStorage.setItem("users", JSON.stringify(users));
-        localStorage.setItem("user", username);
-        document.getElementById("login-page").style.display = "none";
-        document.getElementById("main-page").style.display = "block";
-        loadPosts();
-    }
+    localStorage.setItem("user", username);
+    document.getElementById("login-page").style.display = "none";
+    document.getElementById("main-page").style.display = "block";
+    loadPosts();
 }
 
 function logout() {
@@ -48,64 +60,58 @@ function createPost() {
         reactions: {}
     };
 
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
-    posts.unshift(post);
-    localStorage.setItem("posts", JSON.stringify(posts));
-
+    db.ref("posts").push(post); // Save post to Firebase
     document.getElementById("postContent").value = "";
-    loadPosts();
 }
 
 function loadPosts() {
     const feed = document.getElementById("feed");
-    feed.innerHTML = ""; // Clear previous posts before adding new ones
+    feed.innerHTML = "";
 
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
-    posts.forEach((post, index) => {
-        const currentUser = localStorage.getItem("user");
-        const userReaction = post.reactions[currentUser] || "";
+    db.ref("posts").on("value", snapshot => {
+        feed.innerHTML = "";
+        snapshot.forEach(childSnapshot => {
+            const post = childSnapshot.val();
+            const postKey = childSnapshot.key;
+            const currentUser = localStorage.getItem("user");
+            const userReaction = post.reactions?.[currentUser] || "";
 
-        const postElement = document.createElement("div");
-        postElement.classList.add("post");
-        postElement.innerHTML = `
-            <strong>${post.user}</strong> <br> 
-            ${post.content} <br> 
-            <small>${post.time}</small><br>
-            <div class="reaction-buttons">
-                ${createReactionButtons(index, userReaction)}
-            </div>
-            <div class="reaction-counts" id="reaction-counts-${index}">
-                ${generateReactionCounts(post.reactions)}
-            </div>
-            <button onclick="deletePost(${index})">🗑️ Delete</button>
-        `;
-        feed.appendChild(postElement);
+            const postElement = document.createElement("div");
+            postElement.classList.add("post");
+            postElement.innerHTML = `
+                <strong>${post.user}</strong> <br> 
+                ${post.content} <br> 
+                <small>${post.time}</small><br>
+                <div class="reaction-buttons">
+                    ${createReactionButtons(postKey, userReaction)}
+                </div>
+                <div class="reaction-counts" id="reaction-counts-${postKey}">
+                    ${generateReactionCounts(post.reactions)}
+                </div>
+            `;
+            feed.appendChild(postElement);
+        });
     });
 }
 
-function createReactionButtons(postIndex, userReaction) {
+function createReactionButtons(postKey, userReaction) {
     const reactions = ["👍", "♥️", "👎", "😂", "😭", "😱"];
     return reactions.map(reaction => `
         <button class="reaction-button ${userReaction === reaction ? 'active' : ''}" 
-                onclick="reactToPost(${postIndex}, '${reaction}')">
+                onclick="reactToPost('${postKey}', '${reaction}')">
             ${reaction}
         </button>
     `).join("");
 }
 
-function reactToPost(postIndex, reaction) {
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
+function reactToPost(postKey, reaction) {
     const currentUser = localStorage.getItem("user");
-
     if (!currentUser) return alert("Please log in to react!");
 
-    posts[postIndex].reactions[currentUser] = reaction;
-    localStorage.setItem("posts", JSON.stringify(posts));
-
-    loadPosts();
+    db.ref(`posts/${postKey}/reactions/${currentUser}`).set(reaction);
 }
 
-function generateReactionCounts(reactions) {
+function generateReactionCounts(reactions = {}) {
     const reactionCounts = {};
     Object.values(reactions).forEach(reaction => {
         reactionCounts[reaction] = (reactionCounts[reaction] || 0) + 1;
@@ -113,13 +119,6 @@ function generateReactionCounts(reactions) {
 
     return Object.entries(reactionCounts).map(([reaction, count]) =>
         `<span>${reaction} ${count}</span>`).join(" ");
-}
-
-function deletePost(index) {
-    let posts = JSON.parse(localStorage.getItem("posts")) || [];
-    posts.splice(index, 1);
-    localStorage.setItem("posts", JSON.stringify(posts));
-    loadPosts();
 }
 
 if (localStorage.getItem("user")) {
