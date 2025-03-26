@@ -1,3 +1,12 @@
+const firebaseConfig = {
+    apiKey: "AIzaSyA4VE4mxYVBGQPKs-Y5g5_K6-UjTC2Hc_g",
+    authDomain: "facebook-clone-ad7d8.firebaseapp.com",
+    databaseURL: "https://facebook-clone-ad7d8-default-rtdb.firebaseio.com",
+    projectId: "facebook-clone-ad7d8",
+    storageBucket: "facebook-clone-ad7d8.firebasestorage.app",
+    messagingSenderId: "89704012515",
+    appId: "1:89704012515:web:61a937fb6454d47eb3c3d6"
+};
 function login() {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
